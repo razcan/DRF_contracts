@@ -5,10 +5,19 @@
           <p>{{ auth }}</p>
           <p>{{ contracts }}</p>
           <ul id="example-1">
-            <li v-for="item in contracts" :key="item.id">
-              {{ item.id }}
+            <li v-for="item in items" :key="item.message">
+              {{ item.message }}
             </li>
           </ul>
+          <div class="col-md-12" v-for="(item, index) in list_contracts" :key="index">
+            <span>
+              <i>{{ item.id }}</i> 
+              <b>{{ item.number }}</b>
+              <b>{{ item.code }}</b>
+              <b></b>
+            </span>
+          </div>
+           <!-- <button class="btn btn-link" @click="getContracts">Afiseaza</button> -->
     </div>
   </div>
 </template>
@@ -23,14 +32,14 @@ import axios from "axios";
 
 export default {
   data() {
-    return {
-      contracts: [],
+    return {     
       isLoading: true,
       fullPage: true,
       tags: [],      
       token2: [],
       prefix: [],
-      auth: []
+      auth: [],    
+      list_contracts: []
     };
   },
    computed: {
@@ -38,6 +47,7 @@ export default {
   },
   methods: {    
     getContracts() {
+      this.isLoading = false;
       this.token2 = this.$store.state.token;
       this.prefix = 'Token ';
       this.auth = `${this.prefix}${this.token2.auth_token}`;
@@ -49,7 +59,7 @@ export default {
                    } 
         })
         .then(res => {
-          this.contracts = res.data.results;
+          this.list_contracts = res.data;
           this.isLoading = false;
         })
         .catch(error => {
