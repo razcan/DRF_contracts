@@ -46,6 +46,7 @@
 
 <script>
 import { required, minLength } from "vuelidate/lib/validators";
+// import axios from "axios";
 
 export default {
   data() {
@@ -69,6 +70,13 @@ export default {
       if (this.$v.$invalid) {
         return;
       }
+      //  axios.post('/api/api-token/', {
+      //     username: this.username,
+      //     password: this.password
+      //   })
+      //     .then(response => {
+      //       console.log(response.data.access)
+      //     })
       this.$store
         .dispatch("login", { username, password })
         .then(() => this.$router.replace("/"))
@@ -79,6 +87,16 @@ export default {
           // eslint-disable-next-line
           console.log(err.response.data);
         });
+    }
+  },
+  mutations: {
+    updateStorage (state, { access, refresh }) {
+      state.accessToken = access
+      state.refreshToken = refresh
+    },
+    destroyToken (state) {
+      state.accessToken = null
+      state.refreshToken = null
     }
   }
 };

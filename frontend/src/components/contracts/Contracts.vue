@@ -1,49 +1,65 @@
 <template>
   <div class="container">
     <div class="col-md-8 offset-md-2">
-          <p>Contracts List</p>
-    </div>
-    <div class="vld-parent">
-      <loading :active.sync="isLoading" :is-full-page="fullPage" :opacity="1"></loading>
+          <p>Contracts List</p>     
+          <p>{{ auth }}</p>
+          <p>{{ contracts }}</p>
+          <ul id="example-1">
+            <li v-for="item in contracts" :key="item.id">
+              {{ item.id }}
+            </li>
+          </ul>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import axios from "axios";
 // Import component
-import Loading from "vue-loading-overlay";
+// import Loading from "vue-loading-overlay";
 // Import stylesheet
-import "vue-loading-overlay/dist/vue-loading.css";
+// import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   data() {
     return {
+      contracts: [],
       isLoading: true,
       fullPage: true,
-      tags: []
+      tags: [],      
+      token2: [],
+      prefix: [],
+      auth: []
     };
   },
-  components: {
-    Loading
+   computed: {
+    ...mapGetters(["isLoggedIn", "authUser"])
   },
-  methods: {
-    getTags() {
+  methods: {    
+    getContracts() {
+      this.token2 = this.$store.state.token;
+      this.prefix = 'Token ';
+      this.auth = `${this.prefix}${this.token2.auth_token}`;
+      // console.log(this.auth);
       axios
-        .get("/api/categories")
+        .get("/api/contracts", 
+        { headers: { 
+          'Authorization': this.auth
+                   } 
+        })
         .then(res => {
-          this.tags = res.data;
+          this.contracts = res.data.results;
           this.isLoading = false;
         })
         .catch(error => {
-          // eslint-disable-next-line
           console.error(error);
           this.isLoading = false;
         });
     }
   },
   created() {
-    this.getTags();
+    this.getContracts();
   }
 };
 </script>
@@ -53,3 +69,5 @@ export default {
   margin: 5px 5px;
 }
 </style>
+
+
