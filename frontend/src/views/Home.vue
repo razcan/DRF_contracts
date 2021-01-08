@@ -1,6 +1,6 @@
 <template>
   <!-- Main jumbotron for a primary marketing message or call to action -->
-  <div>
+  <div>    
     <div class="jumbotron">
       <div class="container">
         <h1 class="display-3">Contract Management System</h1>
